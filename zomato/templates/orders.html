@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Orders</title>
+    <style>
+        *{
+            text-align: center;
+            margin: 5px;
+        }
+        body{
+            background-color: rgb(245, 247, 247);
+            text-align: center;
+            line-height: 30px;
+        }
+        button{
+            background-color: green;
+            color: white;
+            padding: 7px 15px;
+            width: 200px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        .take-order-form{
+            margin-top: 100px;
+        }
+       </style>
+</head>
+
+<body>
+    <div class="take-order-form">
+        <h1>Take New Order</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="customer_name">Customer Name:</label>
+                <input type="text" id="customer_name" name="customer_name" class="input-field" required>
+            </div>
+
+            <h2>Select Dishes:</h2>
+            <div class="dish-list">
+                {% for dish_id, dish in menu.items %}
+                <div class="dish-item">
+                    <input type="checkbox" id="dish_{{ dish_id }}" name="selected_dishes" value="{{ dish_id }}"
+                        class="input-checkbox">
+                    <label for="dish_{{ dish_id }}" class="dish-label">{{ dish.name }} - ${{ dish.price }}</label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button class="submit-button" type="submit">Place Order</button>
+        </form>
+        <a class="back-link" href="{% url 'display_menu' %}">Back to Menu</a>
+    </div>
+</body>
+
+</html>

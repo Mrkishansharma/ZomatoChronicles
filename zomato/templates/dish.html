@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zesty Zomato Menu</title>
+    <script src="https://kit.fontawesome.com/1f971e42f5.js" crossorigin="anonymous"></script>
+
+    <style>
+        body{
+            text-align: center;
+        }
+        *{
+            font-family: cursive;
+        }
+        .menu-items{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            background-color: rgb(239, 246, 246);
+            gap: 15px;
+            margin: 10px;
+        }
+
+        .menu-items>div{
+            background-color: aqua;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        .menu-actions{
+            margin-top: 10px;
+        }
+        a{
+            text-decoration: none;
+        }
+        button{
+            width: 150px;
+            background-color: rgb(1, 1, 1);
+            border-radius: 7px;
+            padding: 9px;
+        }
+        button >a{
+            color:white;
+        }
+        .orders{
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            margin: 50px auto;
+            background-color: rgb(239, 246, 246);
+            gap: 20px;
+           
+        }
+        .orders > div{
+            background-color: rgb(232, 248, 248);
+            border-radius: 5px;
+            border: 1px solid gray;
+        }
+    </style>
+   
+</head>
+
+<body>
+    {% block content %}
+    <div class="menu-container">
+        <h1> Menu</h1>
+        <div class="menu-items">
+            {% for dish_id, dish in menu.items %}
+            <div class="menu-item">
+                <div class="menu-details">
+                    <h3>{{ dish.name }}</h3>
+                    <p>${{ dish.price }}</p>
+                    <span class="availability {% if dish.available %}available{% else %}unavailable{% endif %}">
+                        {% if dish.available %}Available{% else %}Not Available{% endif %}
+                    </span>
+                </div>
+                <div class="menu-actions">
+                    <button>
+                        <a class="action" href="{% url 'remove_dish' dish_id %}">Remove</a>
+                    </button>
+                    <button>
+                        <a class="action" href="{% url 'update_availability' dish_id %}">Update Availability</a>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button><a class="action-button" href="{% url 'take_order' %}"> Take New Order</a></button>
+        <button><a class="action-button" href="{% url 'add_dish' %}">Add New Dish</a></button>
+    </div>
+
+    <div class="order-container">
+        <h1>
+            Orders</h1>
+        <div class="orders">
+            {% for order_id, order_data in orders.items %}
+            <div class="order">
+                <p><strong>Order ID:</strong> {{ order_id }}</p>
+                <p><strong>Customer:</strong> {{ order_data.order.customer_name }}</p>
+                <p><strong>Dishes:</strong> {{ order_data.order.dishes|join:", " }}</p>
+                <p><strong>Status:</strong> {{ order_data.status }}</p>
+                {% if order_data.status != 'done' %}
+                <a class="status-action" href="{% url 'update_status' order_id %}">Mark as Done</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    
+    {% endblock %}
+</body>
+<script type="text/javascript" src="script.js"></script>
+
+</html>
